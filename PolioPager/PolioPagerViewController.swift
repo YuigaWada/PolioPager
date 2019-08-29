@@ -50,7 +50,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     
     //MARK: Var
-    private lazy var bundle = Bundle(identifier: "yuwd.PolioPager")
+    private lazy var bundle = Bundle(for: PolioPagerViewController.self)
     private var itemsFrame: [CGRect] = []
     private var itemsWidths: [CGFloat] = []
     public lazy var pageViewController = PageViewController(transitionStyle: .scroll,
