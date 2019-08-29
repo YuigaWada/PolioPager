@@ -50,6 +50,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     
     //MARK: Var
+    private var defaultCellHeight: CGFloat = 50
     private lazy var bundle = Bundle(for: PolioPagerViewController.self)
     private var itemsFrame: [CGRect] = []
     private var itemsWidths: [CGFloat] = []
@@ -82,8 +83,16 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         self.initialIndex += searchTab ? 1 : 0 //TODO: ここいる？
         self.pageViewController.parentVC = self
         
+        defaultCellHeight = self.collectionView.frame.height
+        
         setupCell()
         setupPageView()
+        
+    }
+    
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         setTabItem(tabItems())
     }
     
@@ -137,15 +146,59 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     private func setupPageView()
     {
+        pageViewController.view.frame = self.pageView.frame
+        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        
         self.pageView.addSubview(pageViewController.view)
+        
+        
+        //AutoLayout
+        self.pageView.addConstraints([
+            NSLayoutConstraint(item: pageViewController.view,
+                               attribute: NSLayoutConstraint.Attribute.centerX,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: self.pageView ,
+                               attribute: NSLayoutConstraint.Attribute.centerX,
+                               multiplier: 1.0,
+                               constant: 0),
+            
+            NSLayoutConstraint(item: pageViewController.view,
+                               attribute: NSLayoutConstraint.Attribute.centerY,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: self.pageView,
+                               attribute: NSLayoutConstraint.Attribute.centerY,
+                               multiplier: 1.0,
+                               constant:0),
+            NSLayoutConstraint(item: pageViewController.view,
+                               attribute: NSLayoutConstraint.Attribute.width,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: self.pageView ,
+                               attribute: NSLayoutConstraint.Attribute.width,
+                               multiplier: 1.0,
+                               constant: 0),
+            
+            NSLayoutConstraint(item: pageViewController.view,
+                               attribute: NSLayoutConstraint.Attribute.height,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: self.pageView,
+                               attribute: NSLayoutConstraint.Attribute.height,
+                               multiplier: 1.0,
+                               constant:0)
+            ])
+        
+        
+        
         pageViewController.initialIndex = self.initialIndex
     }
     
     private func setupComponent()
     {
-        //selectedBar
-        let frame = selectedBar.frame
-        selectedBar.frame = CGRect(x: itemsFrame[0].origin.x, y: frame.origin.y, width:itemsFrame[0].width , height: self.selectedBarHeight)
+        //selectedBar: iPhoneXR(height=896)で、デフォルトheight=3なので、割合計算を行う。
+        selectedBar.frame = CGRect(x: itemsFrame[0].origin.x,
+                                   y: self.collectionView.frame.origin.y + self.collectionView.frame.height + 1,
+                                   width:itemsFrame[0].width,
+                                   height: ( 1/896 * self.view.frame.height ) * self.selectedBarHeight)
+
         
         //Tab
         changeUserInteractionEnabled(searchTab: false)
@@ -303,12 +356,18 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         self.setSearchTab()
         
         
-        self.items.forEach{item in
+        for i in 0...self.items.count-1
+        {
+            let item = self.items[i]
             var width: CGFloat
+            let fontSize = ( 1/414 * self.view.frame.width ) * self.items[i].font.pointSize
+            //フォントサイズをXRに合わせて計算し直す
+            
+            self.items[i].font = UIFont(name: self.items[i].font.fontName, size: fontSize)!
             
             if let _ = item.image
             {
-                width = item.cellWidth == nil ? 50 : item.cellWidth!
+                width = item.cellWidth == nil ? defaultCellHeight : item.cellWidth!
             }
             else
             {
@@ -400,8 +459,9 @@ extension PolioPagerViewController: UICollectionViewDataSource, UICollectionView
             tabCell.imageView.image = image
             tabCell.titleLabel.isHidden = true
         }
-        else if let title = items[index].title {
+        else if let title = items[index].title{
             tabCell.titleLabel.text = title
+            tabCell.titleLabel.font = items[index].font
         }
         
         print(tabCell)
@@ -413,7 +473,7 @@ extension PolioPagerViewController: UICollectionViewDataSource, UICollectionView
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = itemsWidths[indexPath.row]
         
-        return CGSize(width: width, height: 50)
+        return CGSize(width: width, height: defaultCellHeight)
     }
     
 }

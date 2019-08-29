@@ -26,7 +26,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="N3Q-ss-jXm">
-                        <rect key="frame" x="18" y="20" width="14" height="14"/>
+                        <rect key="frame" x="18" y="18" width="14" height="14"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="14" id="PBx-An-8zt"/>
                             <constraint firstAttribute="width" constant="14" id="UUw-Kk-Q0a"/>
@@ -39,7 +39,7 @@
                 <constraint firstItem="2S9-i1-ZPg" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="QlA-GQ-wcD"/>
                 <constraint firstItem="2S9-i1-ZPg" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="ifz-nR-ppy"/>
                 <constraint firstItem="N3Q-ss-jXm" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="jug-hD-0qB"/>
-                <constraint firstItem="N3Q-ss-jXm" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" constant="2" id="yFs-Na-CEI"/>
+                <constraint firstItem="N3Q-ss-jXm" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="yFs-Na-CEI"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <connections>
