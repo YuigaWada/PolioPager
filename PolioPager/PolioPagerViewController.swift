@@ -50,7 +50,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     
     //MARK: Var
-    private var defaultCellHeight: CGFloat = 50
+    private var defaultCellHeight: CGFloat?
     private lazy var bundle = Bundle(for: PolioPagerViewController.self)
     private var itemsFrame: [CGRect] = []
     private var itemsWidths: [CGFloat] = []
@@ -83,17 +83,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         self.initialIndex += searchTab ? 1 : 0 //TODO: ここいる？
         self.pageViewController.parentVC = self
         
-        defaultCellHeight = self.collectionView.frame.height
-        
         setupCell()
         setupPageView()
-        
-    }
-    
-    override open func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        setTabItem(tabItems())
     }
     
     override open func viewDidAppear(_ animated: Bool) {
@@ -367,7 +358,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             
             if let _ = item.image
             {
-                width = item.cellWidth == nil ? defaultCellHeight : item.cellWidth!
+                width = item.cellWidth == nil ? defaultCellHeight! : item.cellWidth!
             }
             else
             {
@@ -443,6 +434,12 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
 extension PolioPagerViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
 {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if defaultCellHeight == nil
+        {
+            defaultCellHeight = self.collectionView.frame.height
+            setTabItem(tabItems())
+        }
+        
         return items.count
     }
     
@@ -473,7 +470,12 @@ extension PolioPagerViewController: UICollectionViewDataSource, UICollectionView
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = itemsWidths[indexPath.row]
         
-        return CGSize(width: width, height: defaultCellHeight)
+        guard let height = defaultCellHeight else{
+            return CGSize(width: width, height: self.collectionView.frame.height)
+        }
+        
+        
+        return CGSize(width: width, height: height)
     }
     
 }
