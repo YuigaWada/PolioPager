@@ -44,7 +44,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     
     public var eachLineSpacing: CGFloat = 10
-    public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+    public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 10)
     public var selectedBarHeight: CGFloat = 3
     
     
