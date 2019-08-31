@@ -328,6 +328,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             
             }.forEach{$0.alpha = alpha}
         
+         self.collectionView.backgroundColor = alpha == 1 ? .white : .clear
+        
         self.selectedBar.alpha = alpha
     }
     

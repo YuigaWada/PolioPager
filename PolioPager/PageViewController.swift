@@ -100,6 +100,10 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
      collectionViewはUserInteractionを認識しません。
      したがって、searchBarとcollectionViewのisUserInteractionEnabledを入れ替える必要があります。
      (正直な話、UIViewPropertyAnimatorの適切な使い方がわからないだけです)
+     
+     
+     (追記)
+     SearchBarとcollectionViewの重なり順を逆転させました。
      */
     
     
