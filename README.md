@@ -34,13 +34,15 @@ To get the full benefits,  import `PolioPager`
 ``` swift
 import PolioPager
 ```
-<!--
+
 #### Carthage
 Create a `Cartfile` that lists the framework and run `carthage update`. Follow the [instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios) to add `$(SRCROOT)/Carthage/Build/iOS/PolioPager.framework` to an iOS project.
 
 ```
 github "YuigaWada/PolioPager"
-```-->
+```
+
+
 #### Manually
 1. Download and drop ```PolioPager``` in your project.  
 2. Congratulations!  
