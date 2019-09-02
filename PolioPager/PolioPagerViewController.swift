@@ -93,7 +93,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         setupComponent()
         
         if searchTab{ changeCellAlpha(alpha: 0) }
-
+        
         setupAnimator()
         setPages(viewControllers())
     }
@@ -144,39 +144,41 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         
         //AutoLayout
-        self.pageView.addConstraints([
-            NSLayoutConstraint(item: pageViewController.view,
-                               attribute: NSLayoutConstraint.Attribute.centerX,
-                               relatedBy: NSLayoutConstraint.Relation.equal,
-                               toItem: self.pageView ,
-                               attribute: NSLayoutConstraint.Attribute.centerX,
-                               multiplier: 1.0,
-                               constant: 0),
-            
-            NSLayoutConstraint(item: pageViewController.view,
-                               attribute: NSLayoutConstraint.Attribute.centerY,
-                               relatedBy: NSLayoutConstraint.Relation.equal,
-                               toItem: self.pageView,
-                               attribute: NSLayoutConstraint.Attribute.centerY,
-                               multiplier: 1.0,
-                               constant:0),
-            NSLayoutConstraint(item: pageViewController.view,
-                               attribute: NSLayoutConstraint.Attribute.width,
-                               relatedBy: NSLayoutConstraint.Relation.equal,
-                               toItem: self.pageView ,
-                               attribute: NSLayoutConstraint.Attribute.width,
-                               multiplier: 1.0,
-                               constant: 0),
-            
-            NSLayoutConstraint(item: pageViewController.view,
-                               attribute: NSLayoutConstraint.Attribute.height,
-                               relatedBy: NSLayoutConstraint.Relation.equal,
-                               toItem: self.pageView,
-                               attribute: NSLayoutConstraint.Attribute.height,
-                               multiplier: 1.0,
-                               constant:0)
-            ])
-        
+        if let view = self.pageViewController.view
+        {
+            self.pageView.addConstraints([
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.centerX,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.centerX,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.centerY,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.centerY,
+                                   multiplier: 1.0,
+                                   constant:0),
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.width,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.width,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.height,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.height,
+                                   multiplier: 1.0,
+                                   constant:0)
+                ])
+        }
         
         
         pageViewController.initialIndex = self.initialIndex
@@ -189,7 +191,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                                    y: self.collectionView.frame.origin.y + self.collectionView.frame.height + 1,
                                    width:itemsFrame[0].width,
                                    height: ( 1/896 * self.view.frame.height ) * self.selectedBarHeight)
-
+        
         
         //Tab
         changeUserInteractionEnabled(searchTab: false)
@@ -198,14 +200,14 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         collectionView.backgroundColor = self.tabBackgroundColor
         
         //TODO: fix color bug
-//        let cells = self.collectionView.visibleCells
-//        for i in 0...cells.count-1
-//        {
-//            if let cell = cells[i] as? TabCell
-//            {
-//                //cell.titleLabel.textColor = items[i].normalColor
-//            }
-//        }
+        //        let cells = self.collectionView.visibleCells
+        //        for i in 0...cells.count-1
+        //        {
+        //            if let cell = cells[i] as? TabCell
+        //            {
+        //                //cell.titleLabel.textColor = items[i].normalColor
+        //            }
+        //        }
     }
     
     private func setupAnimator()
@@ -228,9 +230,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             }
             
             
-            let nowFrame = self.itemsFrame[index]
+//            let nowFrame = self.itemsFrame[index]
             let nextFrame = self.itemsFrame[index+1]
-            //let margin = nextFrame.origin.x - nowFrame.origin.x //(always positive)
             
             let animation =
             {
@@ -243,11 +244,12 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                 
                 
                 //Cell Color   TODO: fix bug
+                /*
                 if index != 0
                 {
                     if let nowCell = self.collectionView.visibleCells[index] as? TabCell
                     {
-                       //nowCell.titleLabel.textColor = self.items[index].normalColor
+                        //nowCell.titleLabel.textColor = self.items[index].normalColor
                     }
                 }
                 
@@ -258,7 +260,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                         //nextCell.titleLabel.textColor = self.items[index+1].highlightedColor
                         nextCell.alpha=1
                     }
-                }
+                }*/
                 
                 
                 
@@ -328,7 +330,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             
             }.forEach{$0.alpha = alpha}
         
-         self.collectionView.backgroundColor = alpha == 1 ? .white : .clear
+        self.collectionView.backgroundColor = alpha == 1 ? tabBackgroundColor : .clear
         
         self.selectedBar.alpha = alpha
     }
@@ -463,7 +465,7 @@ extension PolioPagerViewController: UICollectionViewDataSource, UICollectionView
             tabCell.titleLabel.font = items[index].font
         }
         
-        print(tabCell)
+        //print(tabCell) //4Debug
         itemsFrame.append(tabCell.frame)
         
         return tabCell

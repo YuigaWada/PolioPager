@@ -176,10 +176,11 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
                     self.barAnimators[i].pausesOnCompletion = true //preventing animator from stopping when you leave your app.
                 }
                 
-                self.barAnimators.forEach({
-                    print("fractionComplete:")
-                    print($0.fractionComplete)
-                })
+                //4Debug
+//                self.barAnimators.forEach{
+//                    print("fractionComplete:")
+//                    print($0.fractionComplete)
+//                }
                 
                 
                 //TODO: 下二ついる？
@@ -314,12 +315,12 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         
         
         //For Debug
-        print("--------")
-        for i in 0...barAnimators.count-1
-        {
-            print("right" + i.description + ": " + barAnimators[i].fractionComplete.description + " state: " + state2String(barAnimators[i].state))
-        }
-        print("nowIndex: " + nowIndex.description)
+//        print("--------")
+//        for i in 0...barAnimators.count-1
+//        {
+//            print("right" + i.description + ": " + barAnimators[i].fractionComplete.description + " state: " + state2String(barAnimators[i].state))
+//        }
+//        print("nowIndex: " + nowIndex.description)
     }
     
     private func changeUserInteractionEnabled(searchTab: Bool)
@@ -342,6 +343,8 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             return "inactive"
         case .stopped:
             return "stopped"
+        @unknown default:
+            fatalError("Unknown error.")
         }
     }
     
