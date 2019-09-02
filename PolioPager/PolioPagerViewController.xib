@@ -26,8 +26,9 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wzf-PR-459">
+                <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wzf-PR-459">
                     <rect key="frame" x="0.0" y="83" width="414" height="813"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </containerView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ypc-Nb-c7o">
                     <rect key="frame" x="53" y="44" width="361" height="35"/>
@@ -87,15 +88,11 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="Wzf-PR-459" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="1SK-mT-adb"/>
-                <constraint firstAttribute="bottom" secondItem="Wzf-PR-459" secondAttribute="bottom" id="2qS-yh-lBr"/>
                 <constraint firstItem="ypc-Nb-c7o" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="53" id="4XM-Fk-RYl"/>
                 <constraint firstItem="aU5-VK-ObC" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="UC7-Aj-VP0"/>
                 <constraint firstItem="ypc-Nb-c7o" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="ZWH-wQ-KBD"/>
                 <constraint firstItem="ypc-Nb-c7o" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Zom-cB-VMO"/>
-                <constraint firstItem="Wzf-PR-459" firstAttribute="top" secondItem="aU5-VK-ObC" secondAttribute="bottom" constant="4" id="g3I-6H-dp2"/>
                 <constraint firstItem="aU5-VK-ObC" firstAttribute="bottom" secondItem="ypc-Nb-c7o" secondAttribute="bottom" id="lRn-Ut-fb7"/>
-                <constraint firstItem="Wzf-PR-459" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="pAc-Qw-Oes"/>
                 <constraint firstItem="aU5-VK-ObC" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.0390625" id="rQI-Ux-WwE"/>
                 <constraint firstItem="aU5-VK-ObC" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="sMx-mA-cbh"/>
                 <constraint firstItem="aU5-VK-ObC" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="zaK-Hg-hbA"/>

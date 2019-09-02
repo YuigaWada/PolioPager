@@ -50,6 +50,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     
     //MARK: Var
+    private var initialized: Bool = false
     private var defaultCellHeight: CGFloat?
     private lazy var bundle = Bundle(for: PolioPagerViewController.self)
     private var itemsFrame: [CGRect] = []
@@ -89,6 +90,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard !initialized else {return}
         
         setupComponent()
         
@@ -96,6 +98,9 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         setupAnimator()
         setPages(viewControllers())
+        setupAutoLayout()
+        
+        initialized = true
     }
     
     
@@ -141,44 +146,6 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
         self.pageView.addSubview(pageViewController.view)
-        
-        
-        //AutoLayout
-        if let view = self.pageViewController.view
-        {
-            self.pageView.addConstraints([
-                NSLayoutConstraint(item: view,
-                                   attribute: NSLayoutConstraint.Attribute.centerX,
-                                   relatedBy: NSLayoutConstraint.Relation.equal,
-                                   toItem: self.pageView,
-                                   attribute: NSLayoutConstraint.Attribute.centerX,
-                                   multiplier: 1.0,
-                                   constant: 0),
-                
-                NSLayoutConstraint(item: view,
-                                   attribute: NSLayoutConstraint.Attribute.centerY,
-                                   relatedBy: NSLayoutConstraint.Relation.equal,
-                                   toItem: self.pageView,
-                                   attribute: NSLayoutConstraint.Attribute.centerY,
-                                   multiplier: 1.0,
-                                   constant:0),
-                NSLayoutConstraint(item: view,
-                                   attribute: NSLayoutConstraint.Attribute.width,
-                                   relatedBy: NSLayoutConstraint.Relation.equal,
-                                   toItem: self.pageView,
-                                   attribute: NSLayoutConstraint.Attribute.width,
-                                   multiplier: 1.0,
-                                   constant: 0),
-                
-                NSLayoutConstraint(item: view,
-                                   attribute: NSLayoutConstraint.Attribute.height,
-                                   relatedBy: NSLayoutConstraint.Relation.equal,
-                                   toItem: self.pageView,
-                                   attribute: NSLayoutConstraint.Attribute.height,
-                                   multiplier: 1.0,
-                                   constant:0)
-                ])
-        }
         
         
         pageViewController.initialIndex = self.initialIndex
@@ -230,7 +197,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             }
             
             
-//            let nowFrame = self.itemsFrame[index]
+            //            let nowFrame = self.itemsFrame[index]
             let nextFrame = self.itemsFrame[index+1]
             
             let animation =
@@ -245,22 +212,22 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                 
                 //Cell Color   TODO: fix bug
                 /*
-                if index != 0
-                {
-                    if let nowCell = self.collectionView.visibleCells[index] as? TabCell
-                    {
-                        //nowCell.titleLabel.textColor = self.items[index].normalColor
-                    }
-                }
-                
-                if index+1 < self.items.count
-                {
-                    if let nextCell = self.collectionView.visibleCells[index+1] as? TabCell
-                    {
-                        //nextCell.titleLabel.textColor = self.items[index+1].highlightedColor
-                        nextCell.alpha=1
-                    }
-                }*/
+                 if index != 0
+                 {
+                 if let nowCell = self.collectionView.visibleCells[index] as? TabCell
+                 {
+                 //nowCell.titleLabel.textColor = self.items[index].normalColor
+                 }
+                 }
+                 
+                 if index+1 < self.items.count
+                 {
+                 if let nextCell = self.collectionView.visibleCells[index+1] as? TabCell
+                 {
+                 //nextCell.titleLabel.textColor = self.items[index+1].highlightedColor
+                 nextCell.alpha=1
+                 }
+                 }*/
                 
                 
                 
@@ -314,6 +281,90 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         }
     }
     
+    private func setupAutoLayout()
+    {
+        //pageView
+        if let pageView = self.pageView
+        {
+            pageView.translatesAutoresizingMaskIntoConstraints = false
+            self.view.addConstraints([
+                NSLayoutConstraint(item: pageView,
+                                   attribute: NSLayoutConstraint.Attribute.bottom,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.view,
+                                   attribute: NSLayoutConstraint.Attribute.bottom,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: pageView,
+                                   attribute: NSLayoutConstraint.Attribute.left,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.view.safeAreaLayoutGuide,
+                                   attribute: NSLayoutConstraint.Attribute.left,
+                                   multiplier: 1.0,
+                                   constant:0),
+                
+                NSLayoutConstraint(item: pageView,
+                                   attribute: NSLayoutConstraint.Attribute.right,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.view.safeAreaLayoutGuide,
+                                   attribute: NSLayoutConstraint.Attribute.right,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: pageView,
+                                   attribute: NSLayoutConstraint.Attribute.top,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.collectionView,
+                                   attribute: NSLayoutConstraint.Attribute.bottom,
+                                   multiplier: 1.0,
+                                   constant: self.selectedBar.frame.height + 2)
+                ])
+        }
+        
+        //PageViewController
+        if let view = self.pageViewController.view
+        {
+            self.pageView.addConstraints([
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.centerX,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.centerX,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.centerY,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.centerY,
+                                   multiplier: 1.0,
+                                   constant:0),
+                
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.width,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.width,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: view,
+                                   attribute: NSLayoutConstraint.Attribute.height,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.height,
+                                   multiplier: 1.0,
+                                   constant:0)
+                ])
+        }
+        
+        
+        
+        
+        
+    }
     
     
     
