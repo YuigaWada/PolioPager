@@ -224,7 +224,7 @@ You can also get these Components!
 
 ## Todo
 - [ ] highlightedColorがうまく機能しない
-- [ ] Carthageの準備
+- [x] Carthageの準備
 
 
 

@@ -475,7 +475,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         label.text = text + "AA" //微調整
         
         label.sizeToFit()
-        return label.frame.width + 10
+        return label.frame.width
     }
     
 }

@@ -94,7 +94,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
      ** READ THIS. **
      SearchBarはcollectionViewの上に載っていて、左へとスワイプした際、
      UIViewPropertyAnimatorでSearchBarのalphaを、alpha:1→0.1へとアニメーションさせています。
-     (0.1なのはalpha:1→0とした時、alpha=0の時UserInteractionをSearchBarが受け付けないためです。)
+     (0.1なのはalpha:1→0とした場合、alpha=0の時UserInteractionをSearchBarが受け付けないためです。)
      
      alpha=0.1の時、searchBarは見かけ上非表示ですが、実際はcollectionViewの上に乗っかっているので
      collectionViewはUserInteractionを認識しません。
