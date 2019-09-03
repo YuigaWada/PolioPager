@@ -4,14 +4,15 @@
 [![License][license-image]][license-url]
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-
+<br>
 PolioPager is  the easiest way to use PagerTabStrip including search tab in iOS. Written in pure swift.
-
+<br>
 
 ## Preview & Comparison
 SNKRS
 
 <img src="image/SNKRS.gif">
+<br><br>
 
 ↓↓↓↓
 
@@ -19,6 +20,7 @@ PolioPager enables us to use  PagerTabStrip like SNKRS.
 
 <img src="image/PolioPager.gif">
 
+<br><br>
 
 ## Installation
 
@@ -29,7 +31,7 @@ You can use [CocoaPods](http://cocoapods.org/) to install `PolioPager` by adding
 pod 'PolioPager'
 ```
 
-To get the full benefits,  import `PolioPager` 
+To get the full benefits,  import `PolioPager`
 
 ``` swift
 import PolioPager
@@ -46,6 +48,8 @@ github "YuigaWada/PolioPager"
 #### Manually
 1. Download and drop ```PolioPager``` in your project.  
 2. Congratulations!  
+
+<br><br>
 
 ## Usage example
 
@@ -75,19 +79,23 @@ class ViewController: PolioPagerViewController {
     }
 }
 ```
-
+<br><br>
 
 ## Usage
 
 PolioPager is very simple.
 
-First, you have to create a view controller that extends  ``PolioPagerViewController`` 
+First, you have to create a view controller that extends  ``PolioPagerViewController``
 
 ```swift
 class ViewController: PolioPagerViewController {
     ...
 }
 ```
+<br><br>
+*You need at least ``tabItems()`` and ``viewControllers()``.*
+
+
 
 ### Tab Items
 
@@ -117,6 +125,8 @@ override func viewControllers()-> [UIViewController]
 ```
 
 In the above example, ViewControllers are prepared from storyboard.
+
+<br><br>
 
 ### TabItem structure
 
@@ -157,7 +167,7 @@ public struct TabItem {
 
 To get input on TextFiled in Search ViewController, you have to adopt ``PolioPagerSearchTabDelegate`` protocol.
 
-For example, 
+For example,
 
 ```swift
 import PolioPager
@@ -189,6 +199,8 @@ class SearchViewController: UIViewController, PolioPagerSearchTabDelegate, UITex
 }
 ```
 
+<br><br>
+
 ## Customization
 
 
@@ -209,6 +221,11 @@ public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0
 public var selectedBarHeight: CGFloat = 3
 
 ```
+
+<img src="image/tab.png">
+
+<br><br>
+
 You can also get these Components!
 
 ```swift
@@ -221,11 +238,41 @@ You can also get these Components!
 @IBOutlet weak open var cancelButton: UIButton!
 ```
 
+For Example, if you want to change the appearance of selectedBar,
+
+```swift
+//PolioPagerViewController
+
+override func viewDidLoad() {
+     self.selectedBarHeight = 2
+     self.selectedBar.layer.cornerRadius = 0
+     self.selectedBar.backgroundColor = .gray
+
+     super.viewDidLoad()
+ }
+```
+
+<img src="image/tab.png">
+
+<br><br>
+
+## More
+
+If you want to change the visible child view controller, use ``moveTo(index: Int)``
+
+```swift
+//PolioPagerViewController
+
+moveTo(index: 1)
+moveTo(index: nextIndex)
+...
+```
 
 ## Todo
 - [ ] highlightedColorがうまく機能しない
 - [x] Carthageの準備
-
+- [ ] selectedBarのwidthを割合指定可能に
+- [ ] 日本語版READMEの作成
 
 
 ## Contribute
@@ -236,8 +283,8 @@ We would love you for the contribution to **PolioPager**, check the ``LICENSE`` 
 
 ## Others
 
-Yuiga Wada -  [WebSite](https://yuigawada.github.io/) 
-Twitter         - [@YuigaWada](https://twitter.com/YuigaWada) 
+Yuiga Wada -  [WebSite](https://yuigawada.github.io/)
+Twitter         - [@YuigaWada](https://twitter.com/YuigaWada)
 
 
 
