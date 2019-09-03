@@ -43,7 +43,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     public var barAnimationDuration: Double = 0.23
     
     
-    public var eachLineSpacing: CGFloat = 10
+    public var eachLineSpacing: CGFloat = 5
     public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 10)
     public var selectedBarHeight: CGFloat = 3
     
@@ -133,7 +133,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         collectionView.register(UINib(nibName: "TabCell", bundle: self.bundle),forCellWithReuseIdentifier:"cell")
         
         let layout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = self.eachLineSpacing
+        layout.minimumInteritemSpacing = (1/414) * self.eachLineSpacing * self.view.frame.width
         layout.scrollDirection = .horizontal
         layout.sectionInset = self.sectionInset
         
