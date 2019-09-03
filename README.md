@@ -252,7 +252,7 @@ override func viewDidLoad() {
  }
 ```
 
-<img src="image/tab.png">
+<img src="image/selectedBar.png">
 
 <br><br>
 
