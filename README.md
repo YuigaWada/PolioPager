@@ -6,6 +6,8 @@
 
 <br>
 PolioPager is  the easiest way to use PagerTabStrip including search tab in iOS. Written in pure swift.
+
+(日本語は[こちら](https://qiita.com/yuwd/items/d69ab626d823bf16c1c7))
 <br>
 
 ## Preview & Comparison
