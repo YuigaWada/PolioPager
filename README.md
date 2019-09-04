@@ -128,6 +128,17 @@ override func viewControllers()-> [UIViewController]
 
 In the above example, ViewControllers are prepared from storyboard.
 
+
+For those who don't know `` instantiateViewController`` , check below.
+
+<img src="image/storyboardID1.png">
+
+<br><br>
+↓
+<br><br>
+
+<img src="image/storyboardID2.png">
+
 <br><br>
 
 ### TabItem structure
@@ -206,7 +217,7 @@ class SearchViewController: UIViewController, PolioPagerSearchTabDelegate, UITex
 ## Customization
 
 
-### Color, Duration, Frame
+### Color & Frame
 
 Check this.
 
@@ -225,6 +236,20 @@ public var selectedBarHeight: CGFloat = 3
 ```
 
 <img src="image/tab.png">
+
+<br><br>
+
+### Duration
+
+```swift
+public var barAnimationDuration: Double = 0.23 //Default.
+```
+<img src="image/Duration023.gif">
+
+```swift
+public var barAnimationDuration: Double = 0.10
+```
+<img src="image/Duration01.gif">
 
 <br><br>
 
@@ -274,7 +299,7 @@ moveTo(index: nextIndex)
 - [ ] highlightedColorがうまく機能しない
 - [x] Carthageの準備
 - [ ] selectedBarのwidthを割合指定可能に
-- [ ] 日本語版READMEの作成
+- [x] 日本語版READMEの作成
 
 
 ## Contribute
