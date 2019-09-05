@@ -12,6 +12,7 @@ public protocol PageViewParent
 {
     var collectionView: UICollectionView! { get set }
     var barAnimationDuration: Double { get set }
+    var pageViewController: PageViewController { get set }
     
     func changeUserInteractionEnabled(searchTab: Bool)
 }
@@ -26,6 +27,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     
     private var pages: [UIViewController] = []
     private var nowIndex: Int = 0
+    private var scrollPageView: UIScrollView?
     
     private var barAnimationDuration:Double = 0.23
     
@@ -41,6 +43,11 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             //Auto Scroll時はユーザーの操作を受け付けないようにする
             guard let parentVC = self.parentVC else {return}
             parentVC.collectionView.isUserInteractionEnabled = !autoScrolled
+            
+            if let scrollPageView = self.scrollPageView
+            {
+                scrollPageView.isUserInteractionEnabled = !autoScrolled
+            }
         }
     }
     
@@ -60,6 +67,16 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         
         let scrollView = view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
         scrollView.delegate = self // ** HACK **
+        
+        if let parentVC = self.parentVC
+        {
+            parentVC.pageViewController.view.subviews.forEach{ subView in
+                if let scrollView = subView as? UIScrollView
+                {
+                    self.scrollPageView = scrollView
+                }
+            }
+        }
     }
     
     
@@ -115,7 +132,19 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         //タブ遷移のアニメーション, うまい方法見つからんかった
         //I couldn't find better solution to animate selectedBar when tabs is tapped.
         
+        var isCompleted: Bool = false
+        let finalCompletion:(Int,Bool)->Void = { index, searchTab in
+            if isCompleted
+            {
+                self.autoScrolled = false
+                
+                 if index==0 { self.changeUserInteractionEnabled(searchTab: searchTab) }
+            }
+            else
+            { isCompleted = true }
+        }
         
+    
         if index < nowIndex //to left
         {
             //After we call startAnimation() method to start the animations, each animators become unusable.
@@ -156,15 +185,10 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             animators[0].addCompletion({ _ in
                 self.nowIndex = index
                 
+                if self.searchAnimation != nil { self.searchAnimation!() } // memo: (1)
+                
                 self.barAnimators.removeAll()
-                
-                if self.searchAnimation != nil
-                {
-                    self.searchAnimation!() // memo: (1)
-                }
-                
-                self.animations.forEach
-                    {
+                self.animations.forEach {
                         self.barAnimators.append(UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: $0))
                 }
                 
@@ -182,21 +206,14 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
                 
                 
                 //TODO: 下二ついる？
-                animators.filter{$0.state == .active}.forEach{
-                    $0.stopAnimation(true)
-                }
-                
+                animators.filter{$0.state == .active}.forEach{ $0.stopAnimation(true) }
                 animators.removeAll()
                 
-                
-                if index==0
-                {
-                    self.changeUserInteractionEnabled(searchTab:true)
-                }
+                finalCompletion(index,true)
             })
             
             animators[n].startAnimation()
-            self.setViewControllers([self.pages[index]], direction: .reverse, animated: true, completion: {_ in  self.autoScrolled = false})
+            self.setViewControllers([self.pages[index]], direction: .reverse, animated: true, completion: {_ in  finalCompletion(index,true)})
         }
         else //to right
         {
@@ -227,19 +244,17 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
              ~Memo~
              ・Each animations depends on the current position of selectedBar, so we have to move selectedBar to index=0 once.(1)
              */
+            
+            var previousIndex: Int = 0
             animators[animators.count-1].addCompletion({ _ in
-                let now = self.nowIndex
+                previousIndex = self.nowIndex
                 self.nowIndex = index
                 
+                
+                if self.searchAnimation != nil { self.searchAnimation!() } // memo: (1)
+                
                 self.barAnimators.removeAll()
-                
-                if self.searchAnimation != nil
-                {
-                    self.searchAnimation!() // memo: (1)
-                }
-                
-                self.animations.forEach
-                    {
+                self.animations.forEach {
                         self.barAnimators.append(UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: $0))
                 }
                 
@@ -251,20 +266,16 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
                 
                 
                 //TODO: 下二ついる？
-                animators.filter{$0.state == .active}.forEach{
-                    $0.stopAnimation(true)
-                }
-                
+                animators.filter{$0.state == .active}.forEach{ $0.stopAnimation(true) }
                 animators.removeAll()
                 
-                if now==0
-                {
-                    self.changeUserInteractionEnabled(searchTab:false)
-                }
+                if previousIndex==0 { self.changeUserInteractionEnabled(searchTab:false) }
+                
+                finalCompletion(previousIndex,false)
             })
             
             animators[0].startAnimation()
-            self.setViewControllers([self.pages[index]], direction: .forward, animated: true, completion: {_ in                 self.autoScrolled = false})
+            self.setViewControllers([self.pages[index]], direction: .forward, animated: true, completion: {_ in finalCompletion(previousIndex,false)})
             
         }
     }
