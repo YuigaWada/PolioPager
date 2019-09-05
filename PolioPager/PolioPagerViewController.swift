@@ -182,13 +182,13 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         guard pageViewController.barAnimators.count == 0 else {return}
         
         var animators: [UIViewPropertyAnimator] = []
-        var animations: [()->()] = []
+        var actions: [()->()] = []
         let maxIndex = self.itemsFrame.count-2
         
         
         for index in 0...maxIndex
         {
-            let searchTabAnimation  = {
+            let searchTabAction  = {
                 if self.searchTab && index == 0
                 {
                     self.changeCellAlpha(alpha: 1)
@@ -197,10 +197,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             }
             
             
-            //            let nowFrame = self.itemsFrame[index]
             let nextFrame = self.itemsFrame[index+1]
-            
-            let animation =
+            let action =
             {
                 //Selected Bar
                 let barFrame = self.selectedBar.frame
@@ -230,22 +228,17 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                  }*/
                 
                 
-                
-                searchTabAnimation()
+                searchTabAction()
             }
             
-            let barAnimator = UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: animation)
+            let barAnimator = UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: action)
             barAnimator.pausesOnCompletion = true //preventing animator from stopping when you leave your app.
             
             animators.append(barAnimator)
-            animations.append(animation)
+            actions.append(action)
         }
         
-        var searchAnimation: (()->())?
-        if searchTab
-        {
-            searchAnimation =
-                {
+        let searchAction: (()->())? = searchTab ? {
                     let barFrame = self.selectedBar.frame
                     
                     self.selectedBar.frame = CGRect(x: self.itemsFrame[0].origin.x,//barFrame.origin.x + margin,
@@ -255,11 +248,11 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                     
                     self.changeCellAlpha(alpha: 0)
                     self.searchBar.alpha = 1
-            }
+            } : nil
             
-        }
+    
         
-        pageViewController.setAnimators(animators, original: animations, searchAnimation: searchAnimation)
+        pageViewController.setAnimators(animators, originalActions: actions, searchAction: searchAction)
     }
     
     private func setPages(_ viewControllers: [UIViewController])
@@ -409,7 +402,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             let fontSize = ( 1/414 * self.view.frame.width ) * self.items[i].font.pointSize
             //フォントサイズをXRに合わせて計算し直す
             
-            self.items[i].font = UIFont(name: self.items[i].font.fontName, size: fontSize)!
+            self.items[i].font = item.font.withSize(fontSize)
             
             if let _ = item.image
             {

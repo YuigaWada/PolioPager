@@ -21,16 +21,9 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     
     public var initialIndex: Int?
     public var barAnimators: [UIViewPropertyAnimator] = []
-    public var animations: [()->()] = []
-    public var searchAnimation: (()->())?
     
-    
-    private var pages: [UIViewController] = []
-    private var nowIndex: Int = 0
-    private var scrollPageView: UIScrollView?
-    private var initialized: Bool = false
-    
-    private var barAnimationDuration:Double = 0.23
+    public var tabActions: [()->()] = []
+    public var searchAction: (()->())?
     
     public var parentVC: PageViewParent?{
         didSet
@@ -38,6 +31,20 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             self.barAnimationDuration = parentVC!.barAnimationDuration
         }
     }
+    
+    
+    
+    
+    
+    private var pages: [UIViewController] = []
+    private var scrollPageView: UIScrollView?
+    
+    private var initialized: Bool = false
+    
+    private var nowIndex: Int = 0
+    private var barAnimationDuration:Double = 0.23
+    
+
     private var autoScrolled: Bool = false {
         didSet
         {
@@ -88,7 +95,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     
     
     //MARK: SetMethod
-    public func setAnimators(_ animators: [UIViewPropertyAnimator], original: [()->()], searchAnimation: (()->())?)
+    public func setAnimators(_ animators: [UIViewPropertyAnimator], originalActions: [()->()], searchAction: (()->())?)
     {
         for i in 0...(animators.count-1)
         {
@@ -96,8 +103,8 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         }
         
         self.barAnimators = animators
-        self.animations = original
-        self.searchAnimation = searchAnimation
+        self.tabActions = originalActions
+        self.searchAction = searchAction
     }
     
     public func setPages(_ vcs: [UIViewController])
@@ -168,7 +175,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             
             if index==0
             {
-                animators.append(UIViewPropertyAnimator(duration: 0.4, curve: .easeInOut, animations: searchAnimation))
+                animators.append(UIViewPropertyAnimator(duration: 0.4, curve: .easeInOut, animations: searchAction))
                 needChangeUserInteraction = true
             }
             else
@@ -205,10 +212,10 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         animators[startIndex].addCompletion({ _ in
             self.nowIndex = index
             
-            if self.searchAnimation != nil { self.searchAnimation!() } // memo: (1)
+            if self.searchAction != nil { self.searchAction!() } // memo: (1)
             
             self.barAnimators.removeAll()
-            self.animations.forEach {
+            self.tabActions.forEach {
                 self.barAnimators.append(UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: $0))
             }
             
@@ -236,7 +243,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     //MARK: Animator Utility
     private func createAnimator(_ index: Int)-> UIViewPropertyAnimator
     {
-        return UIViewPropertyAnimator(duration: barAnimationDuration, curve: .easeInOut, animations: animations[index])
+        return UIViewPropertyAnimator(duration: barAnimationDuration, curve: .easeInOut, animations: tabActions[index])
     }
     
     private func createChainAnimator(animators: [UIViewPropertyAnimator], ascending: Bool)-> [UIViewPropertyAnimator]
