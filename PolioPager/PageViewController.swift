@@ -28,6 +28,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     private var pages: [UIViewController] = []
     private var nowIndex: Int = 0
     private var scrollPageView: UIScrollView?
+    private var initialized: Bool = false
     
     private var barAnimationDuration:Double = 0.23
     
@@ -62,6 +63,8 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        guard !initialized else {return}
+        
         self.dataSource = self
         self.delegate = self
         
@@ -77,6 +80,8 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
                 }
             }
         }
+        
+        initialized = true
     }
     
     
@@ -124,162 +129,138 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
      */
     
     
+    
+    //タブ遷移のアニメーション, うまい方法見つからんかった
+    //I couldn't find better solution to animate selectedBar when tabs is tapped.
+    
     public func moveTo(index: Int)
     {
         guard index >= 0 && index < pages.count else {return}
         guard index != nowIndex && !autoScrolled else {return}
         
-        //タブ遷移のアニメーション, うまい方法見つからんかった
-        //I couldn't find better solution to animate selectedBar when tabs is tapped.
         
+        //pageView, selectedBar両者のアニメーション終了確定時の処理
         var isCompleted: Bool = false
-        let finalCompletion:(Int,Bool)->Void = { index, searchTab in
+        let finalCompletion:(Bool,Bool)->Void = { needChangeUserInteraction, searchTab in
             if isCompleted
             {
                 self.autoScrolled = false
-                
-                 if index==0 { self.changeUserInteractionEnabled(searchTab: searchTab) }
+                if needChangeUserInteraction { self.changeUserInteractionEnabled(searchTab: searchTab) }
             }
             else
             { isCompleted = true }
         }
         
-    
+        //After we call startAnimation() method to start the animations, each animators become unusable.
+        //So, we have to recreate animators.
+        //Additionaly, We should pay special attention to the fact that each animations depend on the current position of selectedBar.
+        //We have to move selectedBar to index=0 once. → (1)
+        
+        var animators: [UIViewPropertyAnimator]  = []
+        var ascending: Bool = true //アニメーションの連鎖をindex:0 → n 順に取るか逆順に取るか
+        var needChangeUserInteraction: Bool = false
+        var toLeft: Bool = false
+        
         if index < nowIndex //to left
         {
-            //After we call startAnimation() method to start the animations, each animators become unusable.
-            //So, we have to recreate animators.
-            
-            var animators: [UIViewPropertyAnimator]  = []
+            toLeft = true
+            ascending = false
             
             if index==0
             {
                 animators.append(UIViewPropertyAnimator(duration: 0.4, curve: .easeInOut, animations: searchAnimation))
+                needChangeUserInteraction = true
             }
             else
             {
-                for i in index-1...nowIndex-2
-                {
-                    animators.append(UIViewPropertyAnimator(duration: barAnimationDuration, curve: .easeInOut, animations: animations[i]))
-                }
+                for i in index-1...nowIndex-2 { animators.append(createAnimator(i)) }
             }
             
-            let n = animators.count-1
-            for i in 0...n
-            {
-                if n-i-1 >= 0
-                {
-                    animators[n-i].addCompletion{ _ in
-                        animators[n-i-1].startAnimation()
-                    }
-                }
-            }
             
-            autoScrolled = true
-            self.barAnimators.forEach{ $0.stopAnimation(true) }
-            
-            /*
-             ~Memo~
-             ・Each animations depends on the current position of selectedBar, so we have to move selectedBar to index=0 once.(1)
-             */
-            animators[0].addCompletion({ _ in
-                self.nowIndex = index
-                
-                if self.searchAnimation != nil { self.searchAnimation!() } // memo: (1)
-                
-                self.barAnimators.removeAll()
-                self.animations.forEach {
-                        self.barAnimators.append(UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: $0))
-                }
-                
-                for i in 0...self.barAnimators.count-1
-                {
-                    self.barAnimators[i].fractionComplete = (i < index ? 1 : 0) // memo: (1)→Undo
-                    self.barAnimators[i].pausesOnCompletion = true //preventing animator from stopping when you leave your app.
-                }
-                
-                //4Debug
-//                self.barAnimators.forEach{
-//                    print("fractionComplete:")
-//                    print($0.fractionComplete)
-//                }
-                
-                
-                //TODO: 下二ついる？
-                animators.filter{$0.state == .active}.forEach{ $0.stopAnimation(true) }
-                animators.removeAll()
-                
-                finalCompletion(index,true)
-            })
-            
-            animators[n].startAnimation()
-            self.setViewControllers([self.pages[index]], direction: .reverse, animated: true, completion: {_ in  finalCompletion(index,true)})
+            animators = createChainAnimator(animators: animators, ascending: ascending)
         }
         else //to right
         {
-            //After we call startAnimation() method to start the animations, each animators become unusable.
-            //So, we have to recreate animators.
+            toLeft = false
+            ascending = true
+            needChangeUserInteraction = (self.nowIndex == 0) //Bool
             
-            var animators: [UIViewPropertyAnimator]  = []
-            for i in nowIndex...(index-1)
-            {
-                animators.append(UIViewPropertyAnimator(duration: barAnimationDuration, curve: .easeInOut, animations: animations[i]))
-            }
-            
-            for i in 0...animators.count-1
-            {
-                if i+1 < animators.count
-                {
-                    animators[i].addCompletion{ _ in
-                        animators[i+1].startAnimation()
-                    }
-                }
-            }
+            for i in nowIndex...(index-1) { animators.append(createAnimator(i)) }
             
             
-            autoScrolled = true
-            self.barAnimators.filter{ $0.state == .active }.forEach { $0.stopAnimation(true) }
-            
-            /*
-             ~Memo~
-             ・Each animations depends on the current position of selectedBar, so we have to move selectedBar to index=0 once.(1)
-             */
-            
-            var previousIndex: Int = 0
-            animators[animators.count-1].addCompletion({ _ in
-                previousIndex = self.nowIndex
-                self.nowIndex = index
-                
-                
-                if self.searchAnimation != nil { self.searchAnimation!() } // memo: (1)
-                
-                self.barAnimators.removeAll()
-                self.animations.forEach {
-                        self.barAnimators.append(UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: $0))
-                }
-                
-                for i in 0...self.barAnimators.count-1
-                {
-                    self.barAnimators[i].fractionComplete = (i < index ? 1 : 0) // memo: (1)→Undo
-                    self.barAnimators[i].pausesOnCompletion = true//preventing animator from stopping when you leave your app.
-                }
-                
-                
-                //TODO: 下二ついる？
-                animators.filter{$0.state == .active}.forEach{ $0.stopAnimation(true) }
-                animators.removeAll()
-                
-                if previousIndex==0 { self.changeUserInteractionEnabled(searchTab:false) }
-                
-                finalCompletion(previousIndex,false)
-            })
-            
-            animators[0].startAnimation()
-            self.setViewControllers([self.pages[index]], direction: .forward, animated: true, completion: {_ in finalCompletion(previousIndex,false)})
-            
+            animators = createChainAnimator(animators: animators, ascending: ascending)
         }
+        
+        let n = animators.count-1
+        let startIndex = ascending ? n : 0
+        let endIndex = ascending ? 0 : n
+        
+        let direction: UIPageViewController.NavigationDirection = toLeft ? .reverse : .forward
+        
+        
+        
+        autoScrolled = true
+        self.barAnimators.forEach{ $0.stopAnimation(true) }
+        
+        animators[startIndex].addCompletion({ _ in
+            self.nowIndex = index
+            
+            if self.searchAnimation != nil { self.searchAnimation!() } // memo: (1)
+            
+            self.barAnimators.removeAll()
+            self.animations.forEach {
+                self.barAnimators.append(UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: $0))
+            }
+            
+            for i in 0...self.barAnimators.count-1
+            {
+                self.barAnimators[i].fractionComplete = (i < index ? 1 : 0) // memo: (1)→Undo
+                self.barAnimators[i].pausesOnCompletion = true //preventing animator from stopping when you leave your app.
+            }
+            
+            animators.filter{$0.state == .active}.forEach{ $0.stopAnimation(true) }
+            animators.removeAll()
+            
+            finalCompletion(needChangeUserInteraction,toLeft)
+        })
+        
+        animators[endIndex].startAnimation() //連鎖アニメーションを発火
+        self.setViewControllers([self.pages[index]], direction: direction, animated: true, completion: {_ in
+            
+            finalCompletion(needChangeUserInteraction,toLeft)
+            
+        }) //moves Page.
+        
     }
     
+    //MARK: Animator Utility
+    private func createAnimator(_ index: Int)-> UIViewPropertyAnimator
+    {
+        return UIViewPropertyAnimator(duration: barAnimationDuration, curve: .easeInOut, animations: animations[index])
+    }
+    
+    private func createChainAnimator(animators: [UIViewPropertyAnimator], ascending: Bool)-> [UIViewPropertyAnimator]
+    {
+        let n = animators.count-1
+        for i in 0...n
+        {
+            if !ascending && n-i-1 >= 0
+            {
+                animators[n-i].addCompletion{ _ in
+                    animators[n-i-1].startAnimation()
+                }
+            }
+            
+            if ascending && i < n
+            {
+                animators[i].addCompletion{ _ in
+                    animators[i+1].startAnimation()
+                }
+            }
+        }
+        
+        return animators
+    }
     
     
     
@@ -321,15 +302,8 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         guard complete != nil else {return}
         animator!.fractionComplete = complete!
         
-        
-        
         //For Debug
-//        print("--------")
-//        for i in 0...barAnimators.count-1
-//        {
-//            print("right" + i.description + ": " + barAnimators[i].fractionComplete.description + " state: " + state2String(barAnimators[i].state))
-//        }
-//        print("nowIndex: " + nowIndex.description)
+        //printAnimatorStates()
     }
     
     private func changeUserInteractionEnabled(searchTab: Bool)
@@ -355,6 +329,16 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         @unknown default:
             fatalError("Unknown error.")
         }
+    }
+    
+    private func printAnimatorStates()
+    {
+        print("--------")
+        for i in 0...barAnimators.count-1
+        {
+            print("right" + i.description + ": " + barAnimators[i].fractionComplete.description + " state: " + state2String(barAnimators[i].state))
+        }
+        print("nowIndex: " + nowIndex.description)
     }
     
 }
