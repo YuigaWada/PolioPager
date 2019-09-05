@@ -439,7 +439,36 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         let extraMargin = maxWidth - (sectionInset.right + sectionInset.left + cellMarginSum + cellSizeSum)
         let distributee = items.count - (searchTab ? 1 : 0) //下記コメント参照
-        guard extraMargin > 0 else {return self.itemsWidths}
+        guard extraMargin > 0 else {
+            //収まるようにフォントサイズを調整
+            
+            for p in 1...9 // x0.9 → x0.1
+            {
+                self.itemsWidths.removeAll()
+                for i in 0...self.items.count-1
+                {
+                    let item = self.items[i]
+                    var width: CGFloat = 0
+                    let fontSize = self.items[i].font.pointSize * CGFloat(10-p) * 0.1
+                    
+                    
+                    self.items[i].font = item.font.withSize(fontSize)
+                    
+                    if let _ = item.image
+                    {
+                        width = item.cellWidth == nil ? defaultCellHeight! : item.cellWidth!
+                    }
+                    else{
+                        width = labelWidth(text: item.title!, font: item.font)
+                    }
+                    
+                    self.itemsWidths.append(width)
+                }
+                return self.recalculateWidths() //recursion
+            }
+            
+            return self.itemsWidths
+        }
         
         
         
