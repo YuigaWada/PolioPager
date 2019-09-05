@@ -125,8 +125,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             
             if index==0
             {
-                animators.append(UIViewPropertyAnimator(duration: 2.0, curve: .easeInOut, animations: animations[0]))
-                animators[0].isReversed = true //TODO: fix
+                animators.append(UIViewPropertyAnimator(duration: 0.4, curve: .easeInOut, animations: searchAnimation))
             }
             else
             {
@@ -134,7 +133,6 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
                 {
                     animators.append(UIViewPropertyAnimator(duration: barAnimationDuration, curve: .easeInOut, animations: animations[i]))
                 }
-                
             }
             
             let n = animators.count-1
