@@ -442,32 +442,28 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         guard extraMargin > 0 else {
             //収まるようにフォントサイズを調整
             
-            for p in 1...9 // x0.9 → x0.1
+            self.itemsWidths.removeAll()
+            for i in 0...self.items.count-1
             {
-                self.itemsWidths.removeAll()
-                for i in 0...self.items.count-1
+                let item = self.items[i]
+                var width: CGFloat = 0
+                let fontSize = self.items[i].font.pointSize * 0.9 // * 0.9, 0.8, 0.7, 0.65, 0.6, 0.5 ...
+                
+                
+                self.items[i].font = item.font.withSize(fontSize)
+                
+                if let _ = item.image
                 {
-                    let item = self.items[i]
-                    var width: CGFloat = 0
-                    let fontSize = self.items[i].font.pointSize * CGFloat(10-p) * 0.1
-                    
-                    
-                    self.items[i].font = item.font.withSize(fontSize)
-                    
-                    if let _ = item.image
-                    {
-                        width = item.cellWidth == nil ? defaultCellHeight! : item.cellWidth!
-                    }
-                    else{
-                        width = labelWidth(text: item.title!, font: item.font)
-                    }
-                    
-                    self.itemsWidths.append(width)
+                    width = item.cellWidth == nil ? defaultCellHeight! : item.cellWidth!
                 }
-                return self.recalculateWidths() //recursion
+                else{
+                    width = labelWidth(text: item.title!, font: item.font)
+                }
+                
+                self.itemsWidths.append(width)
             }
             
-            return self.itemsWidths
+            return self.recalculateWidths() //recursion
         }
         
         
