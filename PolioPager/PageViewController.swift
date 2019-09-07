@@ -44,7 +44,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     private var nowIndex: Int = 0
     private var barAnimationDuration:Double = 0.23
     
-
+    
     private var autoScrolled: Bool = false {
         didSet
         {
@@ -52,10 +52,9 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             guard let parentVC = self.parentVC else {return}
             parentVC.collectionView.isUserInteractionEnabled = !autoScrolled
             
-            if let scrollPageView = self.scrollPageView
-            {
-                scrollPageView.isUserInteractionEnabled = !autoScrolled
-            }
+            guard let scrollPageView = self.scrollPageView else {return}
+            
+            scrollPageView.isUserInteractionEnabled = !autoScrolled
         }
     }
     
@@ -71,21 +70,17 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         super.viewDidAppear(animated)
         
         guard !initialized else {return}
-        
         self.dataSource = self
         self.delegate = self
         
         let scrollView = view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
         scrollView.delegate = self // ** HACK **
         
-        if let parentVC = self.parentVC
-        {
-            parentVC.pageViewController.view.subviews.forEach{ subView in
-                if let scrollView = subView as? UIScrollView
-                {
-                    self.scrollPageView = scrollView
-                }
-            }
+        guard let parentVC = self.parentVC else {return}
+        parentVC.pageViewController.view.subviews.forEach{ subView in
+            guard let scrollView = subView as? UIScrollView else {return}
+            
+            self.scrollPageView = scrollView
         }
         
         initialized = true
