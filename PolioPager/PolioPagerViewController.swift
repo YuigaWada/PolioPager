@@ -33,6 +33,9 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     @IBOutlet weak open var searchTextField: UITextField!
     @IBOutlet weak open var cancelButton: UIButton!
     
+    @IBOutlet weak private var borderView: UIView!
+    
+    
     //MARK: Input
     public var items: [TabItem] = []
     public var searchTab: Bool = true
@@ -46,6 +49,19 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     public var eachLineSpacing: CGFloat = 5
     public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 10)
     public var selectedBarHeight: CGFloat = 3
+    
+    public var needBorder: Bool = false {
+        didSet{
+            self.borderView.isHidden = !needBorder
+        }
+    }
+    public var boderHeight: CGFloat = 1
+    public var borderColor: UIColor = .lightGray {
+        didSet{
+            self.borderView.backgroundColor = borderColor
+        }
+    }
+    
     
     
     
@@ -276,7 +292,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                                    toItem: self.collectionView,
                                    attribute: NSLayoutConstraint.Attribute.bottom,
                                    multiplier: 1.0,
-                                   constant: self.selectedBar.frame.height + 2)
+                                   constant: self.selectedBar.frame.height + self.boderHeight + 2)
                 ])
         }
         
@@ -315,6 +331,45 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                                    attribute: NSLayoutConstraint.Attribute.height,
                                    multiplier: 1.0,
                                    constant:0)
+                ])
+        }
+        
+        //border
+        if let border = self.borderView
+        {
+            border.translatesAutoresizingMaskIntoConstraints = false
+            self.view.addConstraints([
+                NSLayoutConstraint(item: border,
+                                   attribute: NSLayoutConstraint.Attribute.centerX,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.view,
+                                   attribute: NSLayoutConstraint.Attribute.centerX,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: border,
+                                   attribute: NSLayoutConstraint.Attribute.bottom,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.pageView,
+                                   attribute: NSLayoutConstraint.Attribute.top,
+                                   multiplier: 1.0,
+                                   constant:0),
+                
+                NSLayoutConstraint(item: border,
+                                   attribute: NSLayoutConstraint.Attribute.width,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: self.view,
+                                   attribute: NSLayoutConstraint.Attribute.width,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                
+                NSLayoutConstraint(item: border,
+                                   attribute: NSLayoutConstraint.Attribute.height,
+                                   relatedBy: NSLayoutConstraint.Relation.equal,
+                                   toItem: nil,
+                                   attribute: NSLayoutConstraint.Attribute.height,
+                                   multiplier: 1.0,
+                                   constant: self.boderHeight)
                 ])
         }
         

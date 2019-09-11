@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PolioPagerViewController" customModule="PolioPager" customModuleProvider="target">
             <connections>
+                <outlet property="borderView" destination="Sho-fh-y0R" id="2Vg-pp-Sqa"/>
                 <outlet property="cancelButton" destination="QIt-qH-8xk" id="RHr-Qd-XAf"/>
                 <outlet property="collectionView" destination="aU5-VK-ObC" id="S4w-zF-AR8"/>
                 <outlet property="pageView" destination="Wzf-PR-459" id="a1k-DQ-dhp"/>
@@ -84,6 +85,11 @@
                             <integer key="value" value="5"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sho-fh-y0R">
+                    <rect key="frame" x="0.0" y="79" width="414" height="1"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
