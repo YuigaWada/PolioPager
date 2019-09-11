@@ -188,8 +188,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             
             
             let nextFrame = self.itemsFrame[index+1]
-            let action =
-            {
+            let action = {
                 //Selected Bar
                 let barFrame = self.selectedBar.frame
                 self.selectedBar.frame = CGRect(x: nextFrame.origin.x,//barFrame.origin.x + margin,
@@ -337,7 +336,6 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             }.forEach{$0.alpha = alpha}
         
         self.collectionView.backgroundColor = alpha == 1 ? tabBackgroundColor : .clear
-        
         self.selectedBar.alpha = alpha
     }
     
@@ -356,16 +354,15 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         self.items = items
         self.setSearchTab()
         
-        
+        //フォントサイズをXRに合わせて計算し直す
         for i in 0...self.items.count-1
         {
             let item = self.items[i]
             var width: CGFloat
             let fontSize = ( 1/414 * self.view.frame.width ) * self.items[i].font.pointSize
-            //フォントサイズをXRに合わせて計算し直す
+
             
             self.items[i].font = item.font.withSize(fontSize)
-            
             if let _ = item.image
             {
                 width = item.cellWidth == nil ? defaultCellHeight! : item.cellWidth!
@@ -394,6 +391,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         let extraMargin = maxWidth - (sectionInset.right + sectionInset.left + cellMarginSum + cellSizeSum)
         let distributee = items.count - (searchTab ? 1 : 0) //下記コメント参照
+        
+        
         guard extraMargin > 0 else {
             //収まるようにフォントサイズを調整
             

@@ -53,7 +53,6 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
             parentVC.collectionView.isUserInteractionEnabled = !autoScrolled
             
             guard let scrollPageView = self.scrollPageView else {return}
-            
             scrollPageView.isUserInteractionEnabled = !autoScrolled
         }
     }
@@ -79,7 +78,6 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         guard let parentVC = self.parentVC else {return}
         parentVC.pageViewController.view.subviews.forEach{ subView in
             guard let scrollView = subView as? UIScrollView else {return}
-            
             self.scrollPageView = scrollView
         }
         
