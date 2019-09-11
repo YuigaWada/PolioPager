@@ -253,6 +253,19 @@ public var barAnimationDuration: Double = 0.10
 
 <br><br>
 
+### Border
+
+You can draw the border between Tab and pageView.
+
+```swift
+public var needBorder: Bool
+public var boderHeight: CGFloat = 1
+public var borderColor: UIColor = .lightGray
+```
+
+<br><br>
+### Others
+
 You can also get these Components!
 
 ```swift

@@ -194,25 +194,20 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         for index in 0...maxIndex
         {
-            let searchTabAction  = {
+            let nextFrame = self.itemsFrame[index+1]
+            let action = {
+                //Selected Bar
+                let barFrame = self.selectedBar.frame
+                self.selectedBar.frame = CGRect(x: nextFrame.origin.x,
+                    y: barFrame.origin.y,
+                    width: nextFrame.width,
+                    height: barFrame.height)
+                
                 if self.searchTab && index == 0
                 {
                     self.changeCellAlpha(alpha: 1)
                     self.searchBar.alpha = 0.1
                 }
-            }
-            
-            
-            let nextFrame = self.itemsFrame[index+1]
-            let action = {
-                //Selected Bar
-                let barFrame = self.selectedBar.frame
-                self.selectedBar.frame = CGRect(x: nextFrame.origin.x,//barFrame.origin.x + margin,
-                    y: barFrame.origin.y,
-                    width: nextFrame.width,
-                    height: barFrame.height)
-                
-                searchTabAction()
             }
             
             let barAnimator = UIViewPropertyAnimator(duration: self.barAnimationDuration, curve: .easeInOut, animations: action)
