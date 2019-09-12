@@ -37,19 +37,30 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     
     //MARK: Input
+    
+    
+    //Tab
     public var items: [TabItem] = []
     public var searchTab: Bool = true
     public var initialIndex:Int = 0
-    
     public var tabBackgroundColor: UIColor = .white
-    
-    public var barAnimationDuration: Double = 0.23
-    
     
     public var eachLineSpacing: CGFloat = 5
     public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 10)
     public var selectedBarHeight: CGFloat = 3
     
+    //selectedBar
+    public var barAnimationDuration: Double = 0.23
+    public var selectedBarMargins: (upper: CGFloat, lower: CGFloat) = (1, 2)
+    
+    //pageView
+    public var pageViewMargin: CGFloat = 1
+    public lazy var pageViewController = PageViewController(transitionStyle: .scroll,
+                                                            navigationOrientation: .horizontal,
+                                                            options: nil)
+    
+    
+    //border
     public var needBorder: Bool = false {
         didSet{
             self.borderView.isHidden = !needBorder
@@ -71,10 +82,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     private lazy var bundle = Bundle(for: PolioPagerViewController.self)
     private var itemsFrame: [CGRect] = []
     private var itemsWidths: [CGFloat] = []
-    public lazy var pageViewController = PageViewController(transitionStyle: .scroll,
-                                                            navigationOrientation: .horizontal,
-                                                            options: nil)
-    
+
     
     
     
@@ -171,7 +179,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     {
         //selectedBar: iPhoneXR(height=896)で、デフォルトheight=3なので、割合計算を行う。
         selectedBar.frame = CGRect(x: itemsFrame[0].origin.x,
-                                   y: self.collectionView.frame.origin.y + self.collectionView.frame.height + 1,
+                                   y: self.collectionView.frame.origin.y + self.collectionView.frame.height + selectedBarMargins.upper,
                                    width:itemsFrame[0].width,
                                    height: ( 1/896 * self.view.frame.height ) * self.selectedBarHeight)
         
@@ -287,7 +295,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                                    toItem: self.collectionView,
                                    attribute: .bottom,
                                    multiplier: 1.0,
-                                   constant: self.selectedBar.frame.height + 2 + (needBorder ? self.boderHeight : 0))
+                                   constant: selectedBarMargins.upper + selectedBarMargins.lower + pageViewMargin + self.selectedBar.frame.height + (needBorder ? self.boderHeight : 0))
                 ])
         }
         
@@ -348,7 +356,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                                    toItem: self.pageView,
                                    attribute: .top,
                                    multiplier: 1.0,
-                                   constant:0),
+                                   constant: (-1) * pageViewMargin),
                 
                 NSLayoutConstraint(item: border,
                                    attribute: .width,
