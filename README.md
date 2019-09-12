@@ -3,7 +3,6 @@
 [![Swift Version][swift-image]][swift-url]
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/EZSwiftExtensions.svg)](https://img.shields.io/cocoapods/v/LFAlertController.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-<a href="https://twitter.com/YuigaWada?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @YuigaWada</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <br>
 PolioPager is  the easiest way to use PagerTabStrip including search tab in iOS. Written in pure swift.
@@ -239,6 +238,9 @@ public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0
 
 public var selectedBarHeight: CGFloat = 3
 ```
+
+<br><br>
+
 <img src="image/tab-margin.png">
 
 ```swift
