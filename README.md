@@ -1,8 +1,9 @@
 # PolioPager
+[![License][license-image]][license-url]
 [![Swift Version][swift-image]][swift-url]
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/EZSwiftExtensions.svg)](https://img.shields.io/cocoapods/v/LFAlertController.svg)
-[![License][license-image]][license-url]
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+<a href="https://twitter.com/YuigaWada?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @YuigaWada</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <br>
 PolioPager is  the easiest way to use PagerTabStrip including search tab in iOS. Written in pure swift.
@@ -217,25 +218,49 @@ class SearchViewController: UIViewController, PolioPagerSearchTabDelegate, UITex
 ## Customization
 
 
-### Color & Frame
+### Color & Frame & Duration
 
 Check this.
 
 
 ```swift
-
+//color
 public var tabBackgroundColor: UIColor = .white
 
+//duration
 public var barAnimationDuration: Double = 0.23
-
-
-public var eachLineSpacing: CGFloat = 10
-public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-public var selectedBarHeight: CGFloat = 3
-
 ```
 
 <img src="image/tab.png">
+
+```swift
+public var eachLineSpacing: CGFloat = 5
+public var sectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 10)
+
+public var selectedBarHeight: CGFloat = 3
+```
+<img src="image/tab-margin.png">
+
+```swift
+//selectedBar
+public var selectedBarMargins: (upper: CGFloat, lower: CGFloat) = (1, 2)
+
+//pageView
+public var pageViewMargin: CGFloat = 1
+
+```
+
+<br><br>
+
+### Border
+
+You can draw the border between Tab and pageView.
+
+```swift
+public var needBorder: Bool
+public var boderHeight: CGFloat = 1
+public var borderColor: UIColor = .lightGray
+```
 
 <br><br>
 
@@ -253,17 +278,6 @@ public var barAnimationDuration: Double = 0.10
 
 <br><br>
 
-### Border
-
-You can draw the border between Tab and pageView.
-
-```swift
-public var needBorder: Bool
-public var boderHeight: CGFloat = 1
-public var borderColor: UIColor = .lightGray
-```
-
-<br><br>
 ### Others
 
 You can also get these Components!
@@ -307,6 +321,19 @@ moveTo(index: 1)
 moveTo(index: nextIndex)
 ...
 ```
+
+You can set initial index.
+
+```swift
+class ViewController: PolioPagerViewController {
+
+    override func viewDidLoad() {
+        self.initialIndex = 1
+        ...
+    }
+}
+```
+
 
 ## Todo
 - [ ] highlightedColorがうまく機能しない
