@@ -12,14 +12,17 @@ import PolioPager
 class ViewController: PolioPagerViewController {
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         setup()
+        
+        super.viewDidLoad()
     }
-
+    
     private func setup()
     {
-        //self.needSearchTab = false
+        /*
+         // If you don't need a search tab, add the following code "before" super.viewDidLoad().
+         self.needSearchTab = false
+         */
     }
     
     override func tabItems()-> [TabItem] {
