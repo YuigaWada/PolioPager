@@ -10,7 +10,11 @@ PolioPager is  the easiest way to use PagerTabStrip including search tab in iOS.
 (日本語は[こちら](https://qiita.com/yuwd/items/d69ab626d823bf16c1c7))
 <br>
 
-## Preview & Comparison
+<img src="image/PolioPager.gif">
+
+<br><br>
+
+## Comparison
 SNKRS
 
 <img src="image/SNKRS.gif">
@@ -18,10 +22,12 @@ SNKRS
 
 ↓↓↓↓
 
-PolioPager enables us to use  PagerTabStrip like SNKRS.
 
+PoiloPager
 <img src="image/PolioPager.gif">
 
+
+PolioPager enables us to use  PagerTabStrip like SNKRS.
 <br><br>
 
 ## Installation
