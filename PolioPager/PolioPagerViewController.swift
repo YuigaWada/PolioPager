@@ -41,7 +41,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     //Tab
     public var items: [TabItem] = []
-    public var searchTab: Bool = true
+    public var needSearchTab: Bool = true
     public var initialIndex:Int = 0
     public var tabBackgroundColor: UIColor = .white
     
@@ -105,7 +105,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        self.initialIndex += searchTab ? 1 : 0 //TODO: ここいる？
+        self.initialIndex += needSearchTab ? 1 : 0
         self.pageViewController.parentVC = self
         
         setupCell()
@@ -118,7 +118,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         setupComponent()
         
-        if searchTab{ changeCellAlpha(alpha: 0) }
+        if needSearchTab{ changeCellAlpha(alpha: 0) }
         
         setupAnimator()
         setPages(viewControllers())
@@ -211,7 +211,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
                     width: nextFrame.width,
                     height: barFrame.height)
                 
-                if self.searchTab && index == 0
+                if self.needSearchTab && index == 0
                 {
                     self.changeCellAlpha(alpha: 1)
                     self.searchBar.alpha = 0.1
@@ -225,21 +225,40 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             actions.append(action)
         }
         
-        let searchAction: (()->())? = !searchTab ? nil : {
-            let barFrame = self.selectedBar.frame
+        var initialAction: (()->())?
+        
+        if needSearchTab
+        {
+            let searchAction: (()->())? = {
+                let barFrame = self.selectedBar.frame
+                
+                self.selectedBar.frame = CGRect(x: self.itemsFrame[0].origin.x,//barFrame.origin.x + margin,
+                    y: barFrame.origin.y,
+                    width: self.itemsFrame[0].width,
+                    height: barFrame.height)
+                
+                self.changeCellAlpha(alpha: 0)
+                self.searchBar.alpha = 1
+            }
             
-            self.selectedBar.frame = CGRect(x: self.itemsFrame[0].origin.x,//barFrame.origin.x + margin,
-                y: barFrame.origin.y,
-                width: self.itemsFrame[0].width,
-                height: barFrame.height)
-            
-            self.changeCellAlpha(alpha: 0)
-            self.searchBar.alpha = 1
+            initialAction = searchAction
         }
-        
-        
-        
-        pageViewController.setAnimators(animators, originalActions: actions, searchAction: searchAction)
+        else
+        {
+            let firstCellFrame = self.itemsFrame[0]
+            initialAction = {
+                let barFrame = self.selectedBar.frame
+                self.selectedBar.frame = CGRect(x: firstCellFrame.origin.x,
+                                                y: barFrame.origin.y,
+                                                width: firstCellFrame.width,
+                                                height: barFrame.height)
+            }
+        }
+
+        pageViewController.setAnimators(needSearchTab: needSearchTab,
+                                        animators: animators,
+                                        originalActions: actions,
+                                        initialAction: initialAction)
     }
     
     private func setPages(_ viewControllers: [UIViewController])
@@ -248,7 +267,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             else { fatalError("The number of ViewControllers must equal to the number of TabItems.") }
         
         pageViewController.setPages(viewControllers)
-        if searchTab
+        if needSearchTab
         {
             guard var searchTabViewController = viewControllers[0] as? PolioPagerSearchTabDelegate else{return}
             
@@ -399,7 +418,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     private func setSearchTab()
     {
-        guard self.searchTab else {return}
+        guard self.needSearchTab else {return}
         
         let searchItem = TabItem(image: UIImage(named: "search", in: self.bundle, compatibleWith: nil),
                                  cellWidth: 20)
@@ -448,7 +467,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         }
         
         let extraMargin = maxWidth - (sectionInset.right + sectionInset.left + cellMarginSum + cellSizeSum)
-        let distributee = items.count - (searchTab ? 1 : 0) //下記コメント参照
+        let distributee = items.count - (needSearchTab ? 1 : 0) //下記コメント参照
         
         
         guard extraMargin > 0 else {
@@ -485,7 +504,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         }
         
         
-        if searchTab
+        if needSearchTab
         {
             itemsWidths[0] = self.itemsWidths[0] //searchTabのwidthは保持しておく
         }

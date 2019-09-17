@@ -19,7 +19,7 @@ class ViewController: PolioPagerViewController {
 
     private func setup()
     {
-        
+        //self.needSearchTab = false
     }
     
     override func tabItems()-> [TabItem] {

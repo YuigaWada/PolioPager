@@ -23,7 +23,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     public var barAnimators: [UIViewPropertyAnimator] = []
     
     public var tabActions: [()->()] = []
-    public var searchAction: (()->())?
+    public var initialAction: (()->())?
     
     public var parentVC: PageViewParent?{
         didSet
@@ -40,6 +40,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     private var scrollPageView: UIScrollView?
     
     private var initialized: Bool = false
+    private var needSearchTab: Bool = true
     
     private var nowIndex: Int = 0
     private var barAnimationDuration:Double = 0.23
@@ -88,7 +89,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     
     
     //MARK: SetMethod
-    public func setAnimators(_ animators: [UIViewPropertyAnimator], originalActions: [()->()], searchAction: (()->())?)
+    public func setAnimators(needSearchTab: Bool, animators: [UIViewPropertyAnimator], originalActions: [()->()], initialAction: (()->())?)
     {
         for i in 0...(animators.count-1)
         {
@@ -97,7 +98,8 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         
         self.barAnimators = animators
         self.tabActions = originalActions
-        self.searchAction = searchAction
+        self.initialAction = initialAction
+        self.needSearchTab = needSearchTab
     }
     
     public func setPages(_ vcs: [UIViewController])
@@ -165,11 +167,17 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         {
             toLeft = true
             ascending = false
+            needChangeUserInteraction = (index == 0 && needSearchTab) //Bool
             
             if index==0
             {
-                animators.append(UIViewPropertyAnimator(duration: 0.4, curve: .easeInOut, animations: searchAction))
-                needChangeUserInteraction = true
+                animators.append(UIViewPropertyAnimator(duration: needSearchTab ? 0.4 : barAnimationDuration,
+                                                        curve: .easeInOut,
+                                                        animations: initialAction))
+                if !needSearchTab && nowIndex > 1
+                {
+                    for i in 0...nowIndex-2 { animators.append(createAnimator(i)) }
+                }
             }
             else
             {
@@ -183,7 +191,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         {
             toLeft = false
             ascending = true
-            needChangeUserInteraction = (self.nowIndex == 0) //Bool
+            needChangeUserInteraction = (self.nowIndex == 0 && needSearchTab) //Bool
             
             for i in nowIndex...(index-1) { animators.append(createAnimator(i)) }
             
@@ -205,7 +213,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         animators[startIndex].addCompletion({ _ in
             self.nowIndex = index
             
-            if self.searchAction != nil { self.searchAction!() } // memo: (1)
+            if self.initialAction != nil { self.initialAction!() } // memo: (1)
             
             self.barAnimators.removeAll()
             self.tabActions.forEach {

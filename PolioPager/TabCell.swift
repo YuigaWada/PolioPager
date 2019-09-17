@@ -73,11 +73,7 @@ class TabCell: UICollectionViewCell {
     @objc func singleTap(_ gesture: UITapGestureRecognizer) {
         guard let delegate = delegate else {return}
         
-        //たまにfractionComplete=0.0001みたいになる時がある
-        if delegate.pageViewController.barAnimators[0].fractionComplete > 0.2
-        {
-            delegate.moveTo(index: index)
-        }
+        delegate.moveTo(index: index)
     }
 }
 
