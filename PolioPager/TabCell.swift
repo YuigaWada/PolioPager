@@ -23,7 +23,7 @@ public struct TabItem {
                 font:UIFont = .systemFont(ofSize: 15),
                 cellWidth: CGFloat? = nil,
                 backgroundColor: UIColor = .white,
-                normalColor: UIColor = .lightGray, //.red, //for debug.
+                normalColor: UIColor = .black, //.red, //for debug.
                 highlightedColor: UIColor = .black){
         
         self.title = title
