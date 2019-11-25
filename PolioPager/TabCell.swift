@@ -63,6 +63,11 @@ class TabCell: UICollectionViewCell {
         setupGesture()
     }
     
+    override func layoutSubviews() {
+        self.backgroundColor = .clear
+        super.layoutSubviews()
+    }
+    
     private func setupGesture()
     {
         let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(singleTap(_:)))

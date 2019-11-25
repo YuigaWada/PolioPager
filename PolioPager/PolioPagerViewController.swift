@@ -118,7 +118,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         setupComponent()
         
-        if needSearchTab{ changeCellAlpha(alpha: 0) }
+        if needSearchTab { changeCellAlpha(alpha: 0) }
         
         setupAnimator()
         setPages(viewControllers())
@@ -189,6 +189,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         //Color
         collectionView.backgroundColor = self.tabBackgroundColor
+        self.view.backgroundColor = self.tabBackgroundColor
+        self.searchBar.backgroundColor = .clear
     }
     
     private func setupAnimator()
@@ -562,6 +564,9 @@ extension PolioPagerViewController: UICollectionViewDataSource, UICollectionView
         
         tabCell.delegate = self
         tabCell.index = index
+        tabCell.backgroundColor = items[index].backgroundColor
+        tabCell.titleLabel.textColor = items[index].normalColor
+        tabCell.titleLabel.font = items[index].font
         
         if let image = items[index].image{ //image優先
             tabCell.imageView.image = image
