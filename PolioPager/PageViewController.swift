@@ -43,7 +43,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     private var needSearchTab: Bool = true
     
     private var nowIndex: Int = 0 {
-        willSet(index) { // Set now page's one to true and other's scrollsToTop to false. (#3)
+        willSet(index) { // Set now page's scrollsToTop to true and other's one to false. (#3)
             guard !initialized, pages.count > 0, index >= 0, index < pages.count else { return }
             
             self.pages.forEach { page in
