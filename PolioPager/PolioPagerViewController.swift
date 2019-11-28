@@ -191,6 +191,9 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         collectionView.backgroundColor = self.tabBackgroundColor
         self.view.backgroundColor = self.tabBackgroundColor
         self.searchBar.backgroundColor = .clear
+        
+        //Others
+        self.collectionView.scrollsToTop = false
     }
     
     private func setupAnimator()

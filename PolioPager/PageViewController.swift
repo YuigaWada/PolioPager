@@ -42,7 +42,19 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     private var initialized: Bool = false
     private var needSearchTab: Bool = true
     
-    private var nowIndex: Int = 0
+    private var nowIndex: Int = 0 {
+        willSet(index) { // Set now page's one to true and other's scrollsToTop to false. (#3)
+            guard !initialized, pages.count > 0, index >= 0, index < pages.count else { return }
+            
+            self.pages.forEach { page in
+                let isNowPage = page === pages[index]
+                page.view.allSubviews.forEach { subview in
+                    guard let scrollView = subview as? UIScrollView else { return }
+                    scrollView.scrollsToTop = isNowPage
+                }
+            }
+        }
+    }
     private var barAnimationDuration:Double = 0.23
     
     
@@ -64,12 +76,14 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     //MARK: LifeCycle
     override public func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         guard !initialized else {return}
+        self.scrollPageView?.scrollsToTop = false
         self.dataSource = self
         self.delegate = self
         
