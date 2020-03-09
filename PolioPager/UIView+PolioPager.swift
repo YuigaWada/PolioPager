@@ -10,6 +10,6 @@ import UIKit
 
 internal extension UIView {
     var allSubviews: [UIView] {
-        return self.subviews + self.subviews.flatMap { $0.allSubviews }
+        return subviews + subviews.flatMap { $0.allSubviews }
     }
 }

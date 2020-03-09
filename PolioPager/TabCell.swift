@@ -8,24 +8,23 @@
 
 import UIKit
 
-//imageが優先される
+// imageが優先される
 public struct TabItem {
     var title: String?
     var image: UIImage?
     var font: UIFont
     var cellWidth: CGFloat?
     var backgroundColor: UIColor
-    var normalColor:UIColor
+    var normalColor: UIColor
     var highlightedColor: UIColor
     
     public init(title: String? = nil,
                 image: UIImage? = nil,
-                font:UIFont = .systemFont(ofSize: 15),
+                font: UIFont = .systemFont(ofSize: 15),
                 cellWidth: CGFloat? = nil,
                 backgroundColor: UIColor = .white,
-                normalColor: UIColor = .black, //.red, //for debug.
-                highlightedColor: UIColor = .black){
-        
+                normalColor: UIColor = .black, // .red, //for debug.
+                highlightedColor: UIColor = .black) {
         self.title = title
         self.image = image
         self.font = font
@@ -33,21 +32,15 @@ public struct TabItem {
         self.backgroundColor = backgroundColor
         self.normalColor = normalColor
         self.highlightedColor = highlightedColor
-        
     }
 }
 
-public protocol TabCellDelegate
-{
+public protocol TabCellDelegate {
     func moveTo(index: Int)
     var pageViewController: PageViewController { get set }
 }
 
-
-
-
 class TabCell: UICollectionViewCell {
-    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     
@@ -64,22 +57,19 @@ class TabCell: UICollectionViewCell {
     }
     
     override func layoutSubviews() {
-        self.backgroundColor = .clear
+        backgroundColor = .clear
         super.layoutSubviews()
     }
     
-    private func setupGesture()
-    {
+    private func setupGesture() {
         let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(singleTap(_:)))
         
-        self.addGestureRecognizer(singleTapGesture)
+        addGestureRecognizer(singleTapGesture)
     }
     
     @objc func singleTap(_ gesture: UITapGestureRecognizer) {
-        guard let delegate = delegate else {return}
+        guard let delegate = delegate else { return }
         
         delegate.moveTo(index: index)
     }
 }
-
-

@@ -6,41 +6,36 @@
 //  Copyright © 2019 Yuiga Wada. All rights reserved.
 //
 
-import UIKit
 import PolioPager
+import UIKit
 
 class ViewController: PolioPagerViewController {
-    
     override func viewDidLoad() {
         setup()
         super.viewDidLoad()
     }
     
-    private func setup()
-    {
+    private func setup() {
+        // If you don't need a search tab, add the following code "before" super.viewDidLoad().
+        // self.needSearchTab = false
         
-         // If you don't need a search tab, add the following code "before" super.viewDidLoad().
-        //self.needSearchTab = false
- 
-        //selectedBar
-        self.selectedBarHeight = 2
-        self.selectedBar.layer.cornerRadius = 0
-        self.selectedBar.backgroundColor = .gray
+        // selectedBar
+        selectedBarHeight = 2
+        selectedBar.layer.cornerRadius = 0
+        selectedBar.backgroundColor = .gray
         
-        //cells
-        self.eachLineSpacing = 0
+        // cells
+        eachLineSpacing = 0
     }
     
-    override func tabItems()-> [TabItem] {
-        
+    override func tabItems() -> [TabItem] {
         return [TabItem(title: "Home"),
                 TabItem(title: "Memories"),
                 TabItem(title: "Shared"),
                 TabItem(title: "Albums")]
     }
     
-    override func viewControllers()-> [UIViewController]
-    {
+    override func viewControllers() -> [UIViewController] {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         let searchViewController = storyboard.instantiateViewController(withIdentifier: "searchView")
@@ -51,5 +46,4 @@ class ViewController: PolioPagerViewController {
         
         return [searchViewController, viewController1, viewController2, viewController3, viewController4]
     }
-    
 }
