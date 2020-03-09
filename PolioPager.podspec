@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name         = "PolioPager"
-s.version      = "2.1"
+s.version      = "2.2"
 s.summary      = "PolioPager enables us to use PagerTabStrip like SNKRS."
 s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.homepage     = "https://github.com/yuigawada/PolioPager"

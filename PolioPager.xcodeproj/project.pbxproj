@@ -16,6 +16,7 @@
 		8D579649230EEBA600C63268 /* TabCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D579647230EEBA500C63268 /* TabCell.swift */; };
 		8D57964A230EEBA600C63268 /* TabCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8D579648230EEBA600C63268 /* TabCell.xib */; };
 		8D579650230EF6F300C63268 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D57964F230EF6F200C63268 /* Assets.xcassets */; };
+		8D84061B238F67A500EED595 /* UIView+PolioPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D84061A238F67A500EED595 /* UIView+PolioPager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 		8D579647230EEBA500C63268 /* TabCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabCell.swift; sourceTree = "<group>"; };
 		8D579648230EEBA600C63268 /* TabCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TabCell.xib; sourceTree = "<group>"; };
 		8D57964F230EF6F200C63268 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8D84061A238F67A500EED595 /* UIView+PolioPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+PolioPager.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				8D5795EC230EDD8800C63268 /* Info.plist */,
 				8D57963D230EDE9300C63268 /* PolioPagerViewController.swift */,
 				8D57963E230EDE9400C63268 /* PolioPagerViewController.xib */,
+				8D84061A238F67A500EED595 /* UIView+PolioPager.swift */,
 			);
 			path = PolioPager;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D84061B238F67A500EED595 /* UIView+PolioPager.swift in Sources */,
 				8D57963F230EDE9400C63268 /* PolioPagerViewController.swift in Sources */,
 				8D579646230EEB4F00C63268 /* PageViewController.swift in Sources */,
 				8D579649230EEBA600C63268 /* TabCell.swift in Sources */,
@@ -367,9 +371,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 4LMTSU8RLS;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -394,9 +399,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 4LMTSU8RLS;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
