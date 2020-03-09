@@ -110,11 +110,13 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         setupCell()
         setupPageView()
+        self.selectedBar.isHidden = true
     }
     
     override open func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        guard !initialized else {return}
+        defer { initialized = true }
+        
+        guard !initialized else { super.viewDidAppear(animated); return }
         
         setupComponent()
         
@@ -124,7 +126,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         setPages(viewControllers())
         setupAutoLayout()
         
-        initialized = true
+        self.selectedBar.isHidden = false
+        super.viewDidAppear(animated)
     }
     
     
