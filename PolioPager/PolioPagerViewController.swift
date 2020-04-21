@@ -70,6 +70,9 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     // MARK: Var
     
     private var initialized: Bool = false
+    private var reloading: Bool = false
+    private var cells: [UICollectionViewCell] = []
+    
     private var defaultCellHeight: CGFloat?
     private lazy var bundle = Bundle(for: PolioPagerViewController.self)
     private var itemsFrame: [CGRect] = []
@@ -172,6 +175,16 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         // Others
         collectionView.scrollsToTop = false
     }
+    
+    private func resetSelectedBar() {
+        selectedBar.frame = CGRect(x: 0,
+                                   y: selectedBar.frame.origin.y,
+                                   width: itemsFrame[0].width,
+                                   height: selectedBar.frame.height)
+        selectedBar.setNeedsLayout()
+        selectedBar.layoutIfNeeded()
+    }
+    
     
     private func setupAnimator() {
         guard pageViewController.barAnimators.count == 0 else { return }
@@ -367,21 +380,32 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     
     // MARK: UI
     
-    private func changeCellAlpha(alpha: CGFloat) {
-        collectionView.visibleCells.filter {
-            guard let indexPath = self.collectionView.indexPath(for: $0 as UICollectionViewCell) else { return false }
-            return indexPath.row != 0
-            
-        }.forEach { $0.alpha = alpha }
+    public func reloadPager() {
+        items.removeAll()
+        cells.removeAll()
+        itemsWidths.removeAll()
+        itemsFrame.removeAll()
         
+        pageViewController.resetAnimators()
+        setTabItem(tabItems())
+        
+        reloading = true
+        collectionView.reloadData()
+    }
+    
+    private func changeCellAlpha(alpha: CGFloat) {
+        guard cells.count == items.count else { return }
+        
+        for i in 1 ..< cells.count { cells[i].alpha = alpha }
         collectionView.backgroundColor = alpha == 1 ? tabBackgroundColor : .clear
         selectedBar.alpha = alpha
     }
     
     private func setSearchTab() {
-        guard needSearchTab else { return }
+        guard needSearchTab, items.filter({$0.isSearchTab}).count == 0 else { return }
         
-        let searchItem = TabItem(image: UIImage(named: "search", in: bundle, compatibleWith: nil),
+        let searchItem = TabItem(isSearchTab: true,
+                                 image: UIImage(named: "search", in: bundle, compatibleWith: nil),
                                  cellWidth: 20)
         
         items.insert(searchItem, at: 0)
@@ -499,16 +523,40 @@ extension PolioPagerViewController: UICollectionViewDataSource, UICollectionView
         tabCell.titleLabel.textColor = items[index].normalColor
         tabCell.titleLabel.font = items[index].font
         
+        
+        // initialize
+        tabCell.imageView.image = nil
+        tabCell.titleLabel.text = nil
+        tabCell.titleLabel.isHidden = false
+        tabCell.imageView.isHidden = false
+        
         if let image = items[index].image { // image優先
             tabCell.imageView.image = image
             tabCell.titleLabel.isHidden = true
         } else if let title = items[index].title {
             tabCell.titleLabel.text = title
             tabCell.titleLabel.font = items[index].font
+            tabCell.imageView.isHidden = true
         }
         
         // print(tabCell) //4Debug
         itemsFrame.append(tabCell.frame)
+        
+        if !cells.contains(cell) {
+            cells.append(cell)
+        }
+        
+        if reloading {
+            if itemsFrame.count == items.count { // finished updating itemsFrame
+                resetSelectedBar()
+                changeCellAlpha(alpha: 0)
+                searchBar.alpha = 1
+                setPages(viewControllers())
+                setupAnimator()
+              
+                reloading = false
+            }
+        }
         
         return tabCell
     }

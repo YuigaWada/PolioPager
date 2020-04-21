@@ -17,14 +17,17 @@ public struct TabItem {
     var backgroundColor: UIColor
     var normalColor: UIColor
     var highlightedColor: UIColor
+    var isSearchTab: Bool
     
-    public init(title: String? = nil,
+    public init(isSearchTab: Bool = false,
+                title: String? = nil,
                 image: UIImage? = nil,
                 font: UIFont = .systemFont(ofSize: 15),
                 cellWidth: CGFloat? = nil,
                 backgroundColor: UIColor = .white,
                 normalColor: UIColor = .black, // .red, //for debug.
                 highlightedColor: UIColor = .black) {
+        self.isSearchTab = isSearchTab
         self.title = title
         self.image = image
         self.font = font

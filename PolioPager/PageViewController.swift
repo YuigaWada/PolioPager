@@ -51,6 +51,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     
     private var barAnimationDuration: Double = 0.23
     
+    private var reloading: Bool = false
     private var autoScrolled: Bool = false {
         didSet {
             // Auto Scroll時はユーザーの操作を受け付けないようにする
@@ -99,6 +100,17 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         tabActions = originalActions
         self.initialAction = initialAction
         self.needSearchTab = needSearchTab
+    }
+    
+    public func resetAnimators() {
+        barAnimators.forEach { $0.stopAnimation(true) }
+        
+        nowIndex = 0
+        initialAction = nil
+        reloading = true
+        
+        barAnimators.removeAll()
+        tabActions.removeAll()
     }
     
     public func setPages(_ vcs: [UIViewController]) {
@@ -247,7 +259,7 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
     // MARK: DelegateMethod
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard !autoScrolled else { return }
+        guard !reloading, !autoScrolled else { return }
         
         let maxWidth = view.frame.width
         
@@ -278,6 +290,12 @@ public class PageViewController: UIPageViewController, UIScrollViewDelegate {
         
         // For Debug
         // printAnimatorStates()
+    }
+    
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if reloading {
+            reloading = false
+        }
     }
     
     private func changeUserInteractionEnabled(searchTab: Bool) {
