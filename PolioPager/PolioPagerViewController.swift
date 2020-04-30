@@ -36,6 +36,7 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
     // Tab
     public var items: [TabItem] = []
     public var needSearchTab: Bool = true
+    public var searchIconColor: SearchIconColor = .black
     public var initialIndex: Int = 0
     public var tabBackgroundColor: UIColor = .white
     
@@ -405,10 +406,30 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         guard needSearchTab, items.filter({$0.isSearchTab}).count == 0 else { return }
         
         let searchItem = TabItem(isSearchTab: true,
-                                 image: UIImage(named: "search", in: bundle, compatibleWith: nil),
+                                 image: getSearchIcon(),
                                  cellWidth: 20)
         
         items.insert(searchItem, at: 0)
+    }
+    
+    private func getSearchIcon()-> UIImage? {
+        guard let image = UIImage(named: "search", in: bundle, compatibleWith: nil) else { return nil }
+        return searchIconColor == .white ? reverseBW(image) : image
+    }
+    
+    private func reverseBW(_ original: UIImage)-> UIImage {
+        guard let cgImage = original.cgImage,
+            let filter = CIFilter(name: "CIColorInvert") else { return original }
+        
+        let image = CIImage(cgImage: cgImage)
+        filter.setDefaults()
+        filter.setValue(image, forKey: kCIInputImageKey)
+        
+        let context = CIContext(options: nil)
+        if let imageRef = context.createCGImage(filter.outputImage!, from: image.extent) {
+            return UIImage(cgImage: imageRef)
+        }
+        return original
     }
     
     private func setTabItem(_ items: [TabItem]) {
@@ -497,6 +518,13 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         
         label.sizeToFit()
         return label.frame.width
+    }
+}
+
+extension PolioPagerViewController {
+    public enum SearchIconColor {
+        case black
+        case white
     }
 }
 
