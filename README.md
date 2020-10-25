@@ -53,6 +53,10 @@ Create a `Cartfile` that lists the framework and run `carthage update`. Follow t
 github "YuigaWada/PolioPager"
 ```
 
+#### Swift Package Manager
+
+Open Xcode and Select from menu to File > Swift Packages > Add Package Depende.
+
 
 #### Manually
 1. Download and drop ```PolioPager``` in your project.  

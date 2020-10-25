@@ -254,7 +254,6 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
         guard viewControllers.count == items.count
         else { fatalError("The number of ViewControllers must equal to the number of TabItems.") }
         
-        pageViewController.setPages(viewControllers)
         if needSearchTab {
             guard var searchTabViewController = viewControllers[0] as? PolioPagerSearchTabDelegate else { return }
             
@@ -262,6 +261,8 @@ open class PolioPagerViewController: UIViewController, TabCellDelegate, PolioPag
             searchTabViewController.searchBar = searchBar
             searchTabViewController.cancelButton = cancelButton
         }
+        
+        pageViewController.setPages(viewControllers)
     }
     
     private func setupAutoLayout() {
